@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.encomp.dogapp"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.encomp.dogapp"
@@ -72,4 +72,6 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
+    //Compose navigation
+    implementation("androidx.navigation:navigation-compose:2.7.5")
 }
