@@ -1,6 +1,5 @@
-package com.encomp.dogapp.ui.screens.home
+package com.encomp.dogapp.ui.screens.detail
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
@@ -25,17 +24,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
 
 @Composable
-fun HomeScreen(
-    vm: HomeViewModel = viewModel(),
-    onDogBreedsButtonClicked: () -> Unit
+fun DetailScreen(
+    breed: String,
+    vm: DetailViewModel = viewModel(),
+    onBackButtonClicked: () -> Unit
 ) {
+
     val screenState = vm.uiState.collectAsState()
 
     Column(
@@ -53,7 +53,7 @@ fun HomeScreen(
         )
 
         SubcomposeAsyncImage(
-            model = screenState.value.randomDogImageUrl,
+            model = screenState.value.imageUrl,
             contentDescription = "random dog image",
             modifier = Modifier
                 .size(400.dp)
@@ -76,7 +76,7 @@ fun HomeScreen(
                     ) {
                         Icon(imageVector = Icons.Filled.Warning, contentDescription = null)
                         Text(
-                            text = "Ocorreu um erro ao carregar a imagem.\nTente novamente.",
+                            text = "Ocorreu um erro ao carregar a imagem.",
                         )
                     }
                 }
@@ -85,19 +85,12 @@ fun HomeScreen(
         )
 
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Button(onClick = { vm.getRandomDog() }) {
+            Button(onClick = { vm.getDogImage(breed) }) {
                 Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
             }
 
-            Button(onClick = onDogBreedsButtonClicked) {
-                Text(text = "Ver raças")
-            }
-
-            val context = LocalContext.current
-            Button(onClick = {
-                Toast.makeText(context, "Curtido!", Toast.LENGTH_SHORT).show()
-            }) {
-                Icon(imageVector = Icons.Default.Favorite, contentDescription = null)
+            Button(onClick = onBackButtonClicked) {
+                Icon(imageVector = Icons.Default.Home, contentDescription = null)
             }
         }
     }

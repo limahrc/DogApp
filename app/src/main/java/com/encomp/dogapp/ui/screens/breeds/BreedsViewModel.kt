@@ -1,6 +1,6 @@
 package com.encomp.dogapp.ui.screens.breeds
 
-import androidx.compose.runtime.mutableStateOf
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.encomp.dogapp.data.DogApi
@@ -22,26 +22,33 @@ class BreedsViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = api.getDogBreeds()
-                if (response.isSuccess) {
+
+                if (response.isSuccessful) {
+                    val breeds = response.body()?.message ?: emptyList()
                     uiState.update {
                         it.copy(
                             isLoading = false,
-                            breeds = response.getOrThrow().message
+                            breeds = breeds
                         )
                     }
                 } else {
                     uiState.update {
                         it.copy(
-                            isLoading = false
+                            isLoading = false,
+                            hasError = true,
+                            errorMessage = response.message()
                         )
                     }
                 }
             } catch (e: Exception) {
                 uiState.update {
                     it.copy(
-                        isLoading = false
+                        isLoading = false,
+                        hasError = true,
+                        errorMessage = e.message ?: "Unknown error"
                     )
                 }
+                Log.e("BreedsViewModel", "getBreeds: ", e)
             }
         }
     }
