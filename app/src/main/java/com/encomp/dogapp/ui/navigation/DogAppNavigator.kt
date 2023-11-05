@@ -33,12 +33,11 @@ fun DogAppNavigator(
                 onBackButtonClicked = { navController.popBackStack() })
         }
         composable("breedDetail/{breed}") { backStackEntry ->
-            backStackEntry.arguments?.getString("breed")?.let { breed ->
+                val breed = backStackEntry.arguments?.getString("breed").orEmpty()
                 DetailScreen(
                     breed = breed,
                     onBackButtonClicked = { navController.popBackStack() }
                 )
-            }
         }
     }
 }

@@ -18,16 +18,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
+import com.encomp.dogapp.R
 
 @Composable
 fun DetailScreen(
@@ -35,28 +39,41 @@ fun DetailScreen(
     vm: DetailViewModel = viewModel(),
     onBackButtonClicked: () -> Unit
 ) {
-
     val screenState = vm.uiState.collectAsState()
+
+    LaunchedEffect(screenState.value.breed) {
+        vm.getDogImage(breed)
+    }
 
     Column(
         modifier = Modifier
+            .paint(
+                painterResource(id = R.drawable.bg_bones),
+                contentScale = ContentScale.Crop
+            )
             .fillMaxSize()
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Dog App",
-            style = MaterialTheme.typography.titleLarge,
-            color = Color.Black,
-            fontWeight = FontWeight.Bold
-        )
+        Surface(
+            shape = RoundedCornerShape(8.dp),
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+        ) {
+            Text(
+                text = breed.replaceFirstChar { it.uppercase() },
+                modifier = Modifier.padding(10.dp),
+                style = MaterialTheme.typography.titleLarge,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
         SubcomposeAsyncImage(
             model = screenState.value.imageUrl,
             contentDescription = "random dog image",
             modifier = Modifier
-                .size(400.dp)
+                .size(600.dp)
                 .shadow(1.dp, RoundedCornerShape(8.dp)),
             loading = {
                 LinearProgressIndicator()
@@ -81,7 +98,7 @@ fun DetailScreen(
                     }
                 }
             },
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.Crop,
         )
 
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {

@@ -22,14 +22,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
+import com.encomp.dogapp.R
 
 @Composable
 fun HomeScreen(
@@ -40,17 +43,27 @@ fun HomeScreen(
 
     Column(
         modifier = Modifier
+            .paint(
+                painterResource(id = R.drawable.bg_bones),
+                contentScale = ContentScale.Crop
+            )
             .fillMaxSize()
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Dog App",
-            style = MaterialTheme.typography.titleLarge,
-            color = Color.Black,
-            fontWeight = FontWeight.Bold
-        )
+        Surface(
+            shape = RoundedCornerShape(8.dp),
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+        ) {
+            Text(
+                text = "Dog App",
+                modifier = Modifier.padding(10.dp),
+                style = MaterialTheme.typography.titleLarge,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
         SubcomposeAsyncImage(
             model = screenState.value.randomDogImageUrl,
@@ -81,7 +94,7 @@ fun HomeScreen(
                     }
                 }
             },
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.Crop,
         )
 
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -90,7 +103,7 @@ fun HomeScreen(
             }
 
             Button(onClick = onDogBreedsButtonClicked) {
-                Text(text = "Ver raças")
+                Text(text = "Ver por raça")
             }
 
             val context = LocalContext.current
